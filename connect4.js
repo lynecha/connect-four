@@ -50,7 +50,7 @@ function makeHtmlBoard() {
     let tableRow = document.createElement("tr");
     for (let x = 0; x < WIDTH; x++) {
       let tableCell = document.createElement("td");
-      tableCell.setAttribute("id", y + "-" + x);
+      tableCell.setAttribute("id", `${y}-${x}`);
       tableRow.append(tableCell);
     }
     htmlBoard.append(tableRow);
@@ -60,21 +60,37 @@ function makeHtmlBoard() {
 /** findSpotForCol: given column x, return bottom empty y (null if filled) */
 
 function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 5
-  return 5;
+
+  for (let i = HEIGHT - 1; i >= 0; i--) {
+    if (board[i][x] === undefined) {
+      return i;
+    }
+
+  }
+  return null;
+  // let last = board[x].findIndex(num => (num === 1 || num === 2));
+  // return (board[x].length - last);
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 function placeInTable(y, x) {
+  let cell = document.getElementById(`${y}-${x}`);
   let circle = document.createElement("div");
   circle.classList.add("piece");
+
+
   if (currPlayer === 1) {
     circle.classList.add("p1");
   }
   else {
     circle.classList.add("p2");
   }
+
+  cell.append(circle);
+  console.log(cell);
+  console.log(x);
+  console.log(y);
 }
 
 /** endGame: announce game end */
@@ -87,7 +103,7 @@ function endGame(msg) {
 
 function handleClick(evt) {
   // get x from ID of clicked cell
-  let x = +evt.target.id;
+  let x = evt.target.id;
 
   // get next spot in column (if none, ignore click)
   let y = findSpotForCol(x);
@@ -98,8 +114,8 @@ function handleClick(evt) {
   // place piece in board and add to HTML table
   // TODO: add line to update in-memory board
 
-  board[y][x] = currPlayer;
   placeInTable(y, x);
+  board[y][x] = currPlayer;
 
   // check for win
   if (checkForWin()) {
@@ -111,12 +127,18 @@ function handleClick(evt) {
   if (board.every(row => row.every(cell => cell !== undefined))) {
     endGame("it's a tie");
   }
-  
+
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
-  let currPlayer = (currPlayer == 2) ? 1 : 2;
+  currPlayer = (currPlayer === 1) ? 2 : 1;
 
+  // if (currPlayer == 1) {
+  //   currPlayer = 2;
+  // }
+  // else {
+  //   currPlayer = 1;
+  // }
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -158,5 +180,5 @@ function checkForWin() {
   }
 }
 
-makeBoard(WIDTH,HEIGHT);
+makeBoard(WIDTH, HEIGHT);
 makeHtmlBoard();

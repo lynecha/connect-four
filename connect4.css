@@ -27,10 +27,10 @@
   background-color: gold;
 }
 
-.p1 {
- color: blue; 
+.piece.p1 {
+ background-color: blue; 
 }
 
-.p2 {
-  color: red;
+.piece.p2 {
+  background-color: red;
 }
